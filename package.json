@@ -1,0 +1,49 @@
+{
+  "name": "one-thing-a-day",
+  "version": "0.0.1",
+  "description": "A browser playground for thi.ng modules",
+  "author": "Ja0nz <mail@ja.nz>",
+  "repository": "https://github.com/metachris/typescript-boilerplate",
+  "license": "MIT",
+  "keywords": [
+    "typescript",
+    "umbrella"
+  ],
+  "browser": "./build/_dist_/main.js",
+  "types": "./build/_dist_/tsc/main.d.ts",
+  "bin": {
+    "my-cli-tool": "./dist/esbuild/cli.js"
+  },
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "clean": "del build node_modules/.cache",
+    "clean-build": "$npm_execpath clean && $npm_execpath build",
+    "repl": "ts-node",
+    "eval": "ts-node src/eval.ts",
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "test": "uvu -r ts-node/register",
+    "docs": "typedoc --entryPoints src/main.ts"
+  },
+  "devDependencies": {
+    "@snowpack/plugin-typescript": "^1.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "del-cli": "^3.0.1",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1",
+    "snowpack": "^3.3.7",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.2.0",
+    "typedoc": "^0.20.36",
+    "typescript": "^4.2.4",
+    "uvu": "^0.5.1"
+  },
+  "dependencies": {
+    "@thi.ng/rstream": "^6.0.8",
+    "@thi.ng/transducers": "^7.7.2",
+    "esbuild-wasm": "^0.11.18"
+  }
+}
