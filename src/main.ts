@@ -1,12 +1,8 @@
 import * as tx from "@thi.ng/transducers";
-import { illegalArgs } from "@thi.ng/errors";
 
-(window as any).tx = tx;
-(window as any).illegalArgs = illegalArgs;
-
-const grid = document.getElementById("grid")!;
-const rnode = document.getElementById("r1c1")!;
-if (rnode && grid !== null) {
+const grid = document.getElementById("grid");
+const rnode = document.getElementById("r1c1");
+if (rnode !== null) {
   rnode.addEventListener("mousedown", resizeByNeighborIndex(rnode.dataset));
 }
 
@@ -15,25 +11,20 @@ function resizeByNeighborIndex({ row = 0, col = 0 }) {
   col = Number(col);
 
   return (ev: MouseEvent) => {
-    const xCssDeclarations = tx.comp(
-      tx.map((x) => (x === null ? illegalArgs("Grid is null") : x)),
-      tx.map(getComputedStyle)
-    );
-
     const xRulesToArray = tx.comp(
-      tx.mapcat((x) => x.split("px")),
-      tx.map((x) => Number(x)),
-      tx.filter((x) => x !== 0)
+      tx.mapcat((x: string) => x.split("px")),
+      tx.map((x: string) => Number(x)),
+      tx.filter((x: number) => x !== 0)
     );
     const rows: number[] = tx.transduce(
-      tx.comp(xCssDeclarations, tx.pluck("gridTemplateRows"), xRulesToArray),
+      tx.comp(tx.pluck("gridTemplateRows"), xRulesToArray),
       tx.push(),
       Array(grid)
     );
     const columns: number[] = tx.transduce(
-      tx.comp(xCssDeclarations, tx.pluck("gridTemplateColumns"), xRulesToArray),
+      tx.comp(tx.pluck("gridTemplateColumns"), xRulesToArray),
       tx.push(),
-      Array(grid)
+      Array(getComputedStyle(grid))
     );
 
     function _resize(ev: MouseEvent) {
@@ -51,7 +42,7 @@ function resizeByNeighborIndex({ row = 0, col = 0 }) {
     }
 
     // Set up resize event
-    const target: HTMLElement = ev.target;
+    const target = ev.target as HTMLElement;
     target.addEventListener("mousemove", _resize);
     target.style.zIndex = "1";
     document.documentElement.style.setProperty(
@@ -60,7 +51,7 @@ function resizeByNeighborIndex({ row = 0, col = 0 }) {
     );
 
     // Cleanup
-    function _cleanup(ev) {
+    function _cleanup() {
       target.removeEventListener("mousemove", _resize);
       target.style.zIndex = "";
       document.documentElement.style.setProperty(
@@ -76,26 +67,3 @@ function resizeByNeighborIndex({ row = 0, col = 0 }) {
     target.addEventListener("mouseleave", _cleanup);
   };
 }
-/**
- * This file is the entrypoint of browser builds.
- * The code executes when loaded in a browser.
- */
-// export const foo = async (): Promise<boolean> => {
-//   console.log(greet("World"));
-//   await delayMillis(1000);
-//   console.log("done");
-//   return true;
-// };
-
-// export const delayMillis = (delayMs: number): Promise<void> =>
-//   new Promise((resolve) => setTimeout(resolve, delayMs));
-
-// export const greet = (name: string): string =>
-//   (`Hello ${name}`(
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     window as any
-//   ).foo = foo); // instead of casting window to any, you can extend the Window interface: https://stackoverflow.com/a/43513740/5433572
-
-// console.log(
-//   'Method "foo" was added to the window object. You can try it yourself by just entering "await foo()"'
-// );
