@@ -5,18 +5,12 @@
 module.exports = {
   mount: {
     public: "/",
-    src: "/_dist_"
+    src: "/_dist_",
   },
-  exclude: [
-    '**/node_modules/**/*',
-    '**/src/eval.ts'
-  ],
-  plugins: [
-    '@snowpack/plugin-typescript'
-  ],
+  exclude: ["**/node_modules/**/*", "**/src/eval.ts"],
+  plugins: ["@snowpack/plugin-typescript", "@snowpack/plugin-postcss"],
   packageOptions: {
-    types: true
-    
+    types: true,
   },
   devOptions: {
     /* ... */
