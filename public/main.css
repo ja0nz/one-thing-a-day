@@ -1,0 +1,51 @@
+@windicss;
+:root {
+  --toggle-capture-zone: none;
+}
+
+body {
+  @apply overflow-hidden;
+}
+
+#grid {
+  /* TODO Remove meaningless styling */
+  @apply bg-black border-solid;
+  /* End */
+  @apply grid h-screen;
+
+  grid-template: repeat(1, auto 10px) / repeat(1, auto 10px);
+
+  grid-template-areas:
+    "a0  .  b0"
+    " . r1c1 ." /* row 1 col 1 */
+    "a2  .  b2";
+}
+
+#thing-editor {
+  grid-area: a0;
+  background-color: brown;
+}
+
+#hiccup-html {
+  grid-area: a2;
+  background-color: yellow;
+}
+
+#evaluated-thing {
+  /* rStart / cStart / rEnd / cEnd */
+  grid-area: b0 / b0 / b2 / b2;
+  background-color: orange;
+}
+
+#r1c1::after {
+  content: "";
+  display: var(--toggle-capture-zone);
+  height: 100%;
+  transform: scale(10);
+}
+
+#r1c1 {
+  background-color: black;
+  grid-area: r1c1;
+  transform: scale(3);
+}
