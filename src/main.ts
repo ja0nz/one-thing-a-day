@@ -1,8 +1,10 @@
 import * as tx from "@thi.ng/transducers";
+import { CodeJar } from "codejar";
+import Prism from "prismjs";
+import "prismjs/components/prism-typescript";
 
 const rnode = document.getElementById("r1c1");
 rnode?.addEventListener("mousedown", resizeByNeighborIndex(rnode.dataset));
-
 function resizeByNeighborIndex({ row = 0, col = 0 }) {
   row = Number(row);
   col = Number(col);
@@ -66,3 +68,47 @@ function resizeByNeighborIndex({ row = 0, col = 0 }) {
     resizetarget.addEventListener("mouseleave", _cleanup);
   };
 }
+
+// Code Editor Section
+Prism.manual = true;
+const codeJarOpts = {
+  tab: " ".repeat(4), // default is '\t'
+};
+
+/**
+ * Called on each change in code window
+ * Transforming raw {JS,TS} strings to formatted HTML Strings
+ * */
+const codeJarHighlight = (editor: HTMLElement) => {
+  const highlight = Prism.highlight(
+    editor.textContent as string,
+    Prism.languages.typescript,
+    "typescript"
+  );
+  const fragment = document.createRange().createContextualFragment(highlight);
+  // Cleanup
+  const range = document.createRange();
+  range.selectNodeContents(editor);
+  range.deleteContents();
+  // END Cleanup
+  editor.append(fragment);
+};
+
+// Thing editor
+const thingEditor = document.getElementById("thing-editor") as HTMLElement;
+const thingJar = CodeJar(thingEditor, codeJarHighlight, codeJarOpts);
+
+// HTML editor
+const htmlEditor = document.getElementById("html-editor") as HTMLElement;
+const htmlJar = CodeJar(htmlEditor, codeJarHighlight, codeJarOpts);
+
+// jar.updateCode(`
+// let foo: number = 42;
+// for (let x in y) {
+// console.log('foo')
+// }`);
+
+// Listen to updates
+//jar.onUpdate((code) => {
+//  console.log(code);
+//});

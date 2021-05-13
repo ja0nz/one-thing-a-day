@@ -23,12 +23,10 @@ body {
 
 #thing-editor {
   grid-area: a0;
-  background-color: brown;
 }
 
-#hiccup-html {
+#html-editor {
   grid-area: a2;
-  background-color: yellow;
 }
 
 #evaluated-thing {
