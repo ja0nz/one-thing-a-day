@@ -43,7 +43,9 @@ body {
 }
 
 #r1c1 {
-  background-color: black;
+  background-image: url(/move-cursor.svg);
+  background-color: white;
   grid-area: r1c1;
   transform: scale(3);
+  cursor: move;
 }
