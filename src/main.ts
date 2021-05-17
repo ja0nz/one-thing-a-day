@@ -61,30 +61,31 @@ sync({
         fromPromise(esbuildTransform(prelude)),
         fromPromise(esbuildTransform(main)),
       ],
-      xform: tx.comp(
+    })
+      .transform(
         tx.mapVals(
           (x) => new Blob([x.code], { type: "application/javascript" })
         ),
         tx.mapVals((x) => URL.createObjectURL(x))
-      ),
-    }).subscribe({
-      next(blobs) {
-        const [htmlBlob, thingBlob] = Object.values(blobs);
-        fromPromise(import(htmlBlob))
-          .transform(
-            tx.pluck("default"),
-            tx.map(serialize),
-            tx.map((htmlString) =>
-              document.createRange().createContextualFragment(htmlString)
+      )
+      .subscribe({
+        next(blobs) {
+          const [htmlBlob, thingBlob] = Object.values(blobs);
+          fromPromise(import(htmlBlob))
+            .transform(
+              tx.pluck("default"), // export "default"
+              tx.map(serialize), // hiccup serialize
+              tx.map((htmlString) =>
+                document.createRange().createContextualFragment(htmlString)
+              )
             )
-          )
-          .subscribe({
-            next(fragment) {
-              evaluateArea.replaceChildren(fragment);
-              import(thingBlob);
-            },
-          });
-      },
-    });
+            .subscribe({
+              next(fragment) {
+                evaluateArea.replaceChildren(fragment);
+                import(thingBlob);
+              },
+            });
+        },
+      });
   },
 });

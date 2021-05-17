@@ -1,7 +1,7 @@
 import { fromDOMEvent, merge } from "@thi.ng/rstream";
 import * as tx from "@thi.ng/transducers";
 
-const guttercell = document.getElementById("r1c1") as HTMLElement;
+const guttercell = document.getElementById("movecursor") as HTMLElement;
 
 /**
  * Creates a Stream<MouseEvent> dispatched on mousedown events
@@ -20,7 +20,7 @@ const activateEvent = fromDOMEvent(guttercell, "mousedown")
     },
   })
   .transform(
-    tx.map((ev: MouseEvent) => ev.target.parentElement), // get hosting grid
+    tx.map((ev: MouseEvent) => ev.target.closest("#grid")), // get hosting grid
     tx.map(getComputedStyle), // get CSSStyleDeclaration
     tx.multiplexObj({
       rows: tx.pluck("gridTemplateRows"), //get rows: "1px 12px 12px"
@@ -63,21 +63,20 @@ fromDOMEvent(guttercell, "mousemove").subscribe({
     if (!!target.style.zIndex) {
       const row = Number(target.dataset.row);
       const col = Number(target.dataset.col);
+      const grid = target.closest("#grid");
       const { columns, rows } = activateEvent.deref(); // IMPURE
 
       // Y axis
       columns[col - 1] = columns[col - 1] + event.movementX;
       columns[col + 1] = columns[col + 1] - event.movementX;
-      target.parentElement.style.gridTemplateColumns = columns
+      grid.style.gridTemplateColumns = columns
         .map((x: number) => `${x}px`)
         .join(" ");
 
       // X axis
       rows[row - 1] = rows[row - 1] + event.movementY;
       rows[row + 1] = rows[row + 1] - event.movementY;
-      target.parentElement.style.gridTemplateRows = rows
-        .map((x: number) => `${x}px`)
-        .join(" ");
+      grid.style.gridTemplateRows = rows.map((x: number) => `${x}px`).join(" ");
     }
   },
 });
