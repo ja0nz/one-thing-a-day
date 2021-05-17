@@ -5,5 +5,6 @@ mkShell {
    nodePackages.serve
    nodePackages.prettier
    xsel
+   html-tidy
   ];
 }
