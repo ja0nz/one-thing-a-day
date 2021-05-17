@@ -19,11 +19,11 @@ const thingHtml = `
 import { tw } from "https://cdn.skypack.dev/twind";
 const app = [
   "main",
-  { class: tw\`h-screen bg-purple-400 flex items-center justify-center\` },
+  { class: tw\`h-screen bg-purple-400 flex flex-col items-center justify-center\` },
   [
     "h1",
     { class: tw\`font-bold text(center 5xl white sm:gray-800 md:pink-700)\` },
-    "This is Twind!",
+    "Hello👋@thi.ng",
   ],
   [ "div#app" ]
 ];
