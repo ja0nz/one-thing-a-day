@@ -1,43 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width" />
-        <title>One thi.ng a day - playground</title>
-        <link rel="stylesheet" href="main.css" />
-        <link rel="stylesheet" href="prism-lucario.css" />
-    </head>
-
-    <body>
-        <main id="grid">
-            <code class="language-ts" id="thing-editor">
-// Thing Editor - This is going to be evaluated second
-let foo: number = 42;
-for (let x in y) {
-    console.log('foo')
-}
-            </code>
-            <code class="language-ts" id="html-editor">
-// HTML Hiccup Editor - This is going to be evaluated first
-import { tw } from "https://cdn.skypack.dev/twind";
-//import { serialize } from "https://cdn.skypack.dev/@thi.ng/hiccup";
-
-const app = [
-  "main",
-  { class: tw`h-screen bg-purple-400 flex items-center justify-center` },
-  [
-    "h1",
-    { class: tw`font-bold text(center 5xl white sm:gray-800 md:pink-700)` },
-    "This is Twind!",
-  ],
-];
-
-//document.getElementById("twind").innerHTML = serialize(greeter);
-export default app;
-            </code>
-            <div id="evaluated-thing">evaluated</div>
-            <div id="r1c1" data-row="1" data-col="1"></div>
-        </div>
-        <script type="module" src="/_dist_/main.js"></script>
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>One thi.ng a day - playground</title>
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="prism-lucario.css">
+</head>
+<body>
+  <main id="grid">
+    <section>
+      <code class="language-ts" id="thing-editor"></code>
+      <button id="evaluate" class=
+      "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Evaluate</button>
+    </section><code class="language-js" id="html-editor"></code>
+    <div id="evaluated-thing" class="language-css">
+      Evaluate Area
+    </div>
+    <div id="r1c1" data-row="1" data-col="1"></div>
+    <script type="module" src="/_dist_/main.js"></script>
+  </main>
+</body>
 </html>
