@@ -38,13 +38,53 @@ const thingJar = CodeJar(thingEditor, codeJarHighlight, codeJarOpts);
 const htmlEditor = document.getElementById("html-editor") as HTMLElement;
 const htmlJar = CodeJar(htmlEditor, codeJarHighlight, codeJarOpts);
 
-// jar.updateCode(`
-// let foo: number = 42;
-// for (let x in y) {
-// console.log('foo')
-// }`);
+thingJar.updateCode(thingStar);
+htmlJar.updateCode(thingHtml);
 
-// Listen to updates
-//jar.onUpdate((code) => {
-//  console.log(code);
-//});
+const evaluateBtn = document.getElementById("evaluate") as HTMLElement;
+const evaluateArea = document.getElementById("evaluated-thing") as HTMLElement;
+const esbuild = initialize({
+  wasmURL: "./esbuild-wasm/esbuild.wasm",
+});
+
+sync({
+  src: [fromPromise(esbuild), fromDOMEvent(evaluateBtn, "click")],
+}).subscribe({
+  next() {
+    const prelude = htmlEditor.textContent;
+    const main = thingEditor.textContent;
+    const esbuildTransform = (textContent: string) =>
+      transform(textContent, { loader: "ts", format: "esm" });
+
+    sync({
+      src: [
+        fromPromise(esbuildTransform(prelude)),
+        fromPromise(esbuildTransform(main)),
+      ],
+      xform: tx.comp(
+        tx.mapVals(
+          (x) => new Blob([x.code], { type: "application/javascript" })
+        ),
+        tx.mapVals((x) => URL.createObjectURL(x))
+      ),
+    }).subscribe({
+      next(blobs) {
+        const [htmlBlob, thingBlob] = Object.values(blobs);
+        fromPromise(import(htmlBlob))
+          .transform(
+            tx.pluck("default"),
+            tx.map(serialize),
+            tx.map((htmlString) =>
+              document.createRange().createContextualFragment(htmlString)
+            )
+          )
+          .subscribe({
+            next(fragment) {
+              evaluateArea.replaceChildren(fragment);
+              import(thingBlob);
+            },
+          });
+      },
+    });
+  },
+});

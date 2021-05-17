@@ -4,8 +4,9 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    public: "/",
-    src: "/_dist_",
+    "public": "/",
+    "src": "/_dist_",
+    "node_modules/esbuild-wasm": "/esbuild-wasm"
   },
   exclude: ["**/node_modules/**/*", "**/src/eval.ts"],
   plugins: ["@snowpack/plugin-typescript", "@snowpack/plugin-postcss"],
